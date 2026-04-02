@@ -1,0 +1,214 @@
+{
+  "skill": "book-writer",
+  "version": "3.0.0",
+  "test_cases": [
+    {
+      "id": "tc_01_init_fantasy",
+      "name": "판타지 소설 프로젝트 초기화",
+      "description": "판타지 소설 프로젝트를 초기화하고 올바른 디렉토리 구조가 생성되는지 확인",
+      "script": "init_project.py",
+      "assertions": [
+        "project.json의 type이 'fiction'",
+        "project.json의 structure가 'heros_journey'",
+        "codex/ 디렉토리에 5개의 .md 파일",
+        "outline/ 디렉토리에 3개의 .md 파일"
+      ]
+    },
+    {
+      "id": "tc_02_init_nonfiction",
+      "name": "비소설 프로젝트 초기화",
+      "description": "자기계발서 프로젝트 초기화, 비소설 구조 적용 확인",
+      "script": "init_project.py",
+      "assertions": [
+        "project.json의 type이 'nonfiction'",
+        "project.json의 structure가 'problem_cause_solution'",
+        "codex/research.md 존재",
+        "codex/characters.md 미존재"
+      ]
+    },
+    {
+      "id": "tc_03_init_webnovel",
+      "name": "웹소설 프로젝트 초기화",
+      "description": "헌터물 웹소설 프로젝트 초기화",
+      "script": "init_project.py",
+      "assertions": [
+        "genre가 'hunter' 또는 해당 장르",
+        "chapter_wordcount가 3000-5000 범위",
+        "프로젝트 디렉토리 구조 정상 생성"
+      ]
+    },
+    {
+      "id": "tc_04_consistency_check",
+      "name": "일관성 검사 실행",
+      "description": "원고의 일관성을 검사하고 리포트 생성 확인",
+      "script": "consistency_checker.py",
+      "precondition": "최소 3개 챕터가 작성된 프로젝트",
+      "assertions": [
+        "score가 0-100 범위",
+        "summary에 errors/warnings/infos 필드 존재",
+        "edits/consistency_report.json 생성",
+        "edits/consistency_report.md 생성"
+      ]
+    },
+    {
+      "id": "tc_05_style_analysis",
+      "name": "문체 분석 실행 (v3.0 전체)",
+      "description": "22개 분석 함수가 모두 실행되는지 확인",
+      "script": "style_analyzer.py",
+      "precondition": "최소 1개 챕터가 작성된 프로젝트",
+      "assertions": [
+        "ai_cliches 분석 결과 존재",
+        "adverb_usage 분석 결과 존재",
+        "emotional_arc 분석 결과 존재",
+        "translation_artifacts 분석 결과 존재",
+        "deep_pov 분석 결과 존재",
+        "hook_quality 분석 결과 존재",
+        "webnovel_cliches 분석 결과 존재",
+        "score가 0-100 범위",
+        "recommendations 배열 존재"
+      ]
+    },
+    {
+      "id": "tc_06_emotional_arc",
+      "name": "감정 아크 분석",
+      "description": "Vonnegut Story Shape 매칭 및 ASCII 시각화 확인",
+      "script": "emotional_arc_analyzer.py",
+      "precondition": "최소 5개 챕터",
+      "assertions": [
+        "story_shape.name 존재",
+        "story_shape.confidence 0-100 범위",
+        "chapter_emotions 배열 길이 = 챕터 수",
+        "각 emotion에 polarity 필드 존재 (-1~+1)",
+        "ascii_chart 문자열 존재",
+        "tension_curve 배열 존재"
+      ]
+    },
+    {
+      "id": "tc_07_readability",
+      "name": "가독성 점수 계산",
+      "description": "한국어 가독성 + TTR + Burstiness 계산 확인",
+      "script": "readability_scorer.py",
+      "assertions": [
+        "korean_readability.score 0-100 범위",
+        "sentence_stats.cv 존재",
+        "vocabulary_richness.ttr 0-1 범위",
+        "burstiness.score 0-1 범위",
+        "distinct_n.distinct_1 존재",
+        "chapter_scores 배열 존재"
+      ]
+    },
+    {
+      "id": "tc_08_format_docx",
+      "name": "DOCX 변환",
+      "description": "마크다운 원고를 DOCX로 변환",
+      "script": "format_manuscript.py --format docx",
+      "precondition": "python-docx 설치, 최소 1개 챕터",
+      "assertions": [
+        "output/ 디렉토리에 .docx 파일 생성",
+        "파일 크기 > 0",
+        "모든 챕터 포함"
+      ]
+    },
+    {
+      "id": "tc_09_format_epub",
+      "name": "EPUB 변환",
+      "description": "마크다운 원고를 EPUB으로 변환",
+      "script": "format_manuscript.py --format epub",
+      "precondition": "ebooklib 설치, 최소 1개 챕터",
+      "assertions": [
+        "output/ 디렉토리에 .epub 파일 생성",
+        "파일 크기 > 0"
+      ]
+    },
+    {
+      "id": "tc_10_blurb_generator",
+      "name": "블러브/마케팅 패키지 생성",
+      "description": "블러브 프롬프트, 키워드, 메타데이터, 투고 샘플 생성 확인",
+      "script": "blurb_generator.py",
+      "assertions": [
+        "keywords.extracted 배열 존재",
+        "keywords.kdp_keywords 7개 이하",
+        "blurb_prompts에 short/medium/long/logline 존재",
+        "metadata.bisac_code 존재",
+        "submission_package.sample_path 존재",
+        "output/marketing_package.json 생성"
+      ]
+    },
+    {
+      "id": "tc_11_webnovel_optimizer",
+      "name": "웹소설 최적화 분석",
+      "description": "플랫폼별 챕터 길이 검증, 후크 분석, 첫 3화 점수",
+      "script": "webnovel_optimizer.py kakaopage",
+      "precondition": "최소 3개 챕터",
+      "assertions": [
+        "length_analysis.compliance_pct 0-100 범위",
+        "hook_analysis.avg_score 0-10 범위",
+        "first3_score.total_score 0-100 범위",
+        "schedule.start_date 존재",
+        "overall_score 0-100 범위"
+      ]
+    },
+    {
+      "id": "tc_12_chapter_splitter",
+      "name": "챕터 자동 분할 (dry run)",
+      "description": "긴 챕터의 분할 포인트 탐지 확인",
+      "script": "chapter_splitter.py --target 4000",
+      "assertions": [
+        "total_episodes > 0",
+        "분할 필요 챕터에 split_points 존재",
+        "edits/split_report.json 생성"
+      ]
+    },
+    {
+      "id": "tc_13_qa_review",
+      "name": "QA 최종 검증 (10카테고리)",
+      "description": "모든 QA 카테고리의 점수 산출 및 등급 부여 확인",
+      "script": "qa_reviewer.py",
+      "assertions": [
+        "total_score 0-100 범위",
+        "grade가 A/B/C/D/F 중 하나",
+        "is_publishable boolean 존재",
+        "category_scores에 6개+ 카테고리",
+        "recommendations 배열 존재",
+        "edits/qa_report.json 생성"
+      ]
+    },
+    {
+      "id": "tc_14_codex_generation",
+      "name": "Codex 스토리 바이블 생성",
+      "description": "소설 타입에 맞는 Codex 스켈레톤 생성 확인",
+      "script": "generate_codex.py",
+      "assertions": [
+        "codex_dir 경로 존재",
+        "fiction: characters/worldbuilding/timeline/themes/rules 생성",
+        "nonfiction: research/sources/themes 생성"
+      ]
+    },
+    {
+      "id": "tc_15_full_pipeline",
+      "name": "전체 파이프라인 통합 테스트",
+      "description": "Phase 0→1→3→4→5→6→QA 전체 흐름 테스트",
+      "precondition": "python-docx, ebooklib 설치",
+      "assertions": [
+        "project.json 생성 (Phase 0)",
+        "outline/structure.md 생성 (Phase 1-2)",
+        "codex/ 파일 생성 (Phase 3)",
+        "chapters/ 파일 생성 (Phase 4)",
+        "edits/ 리포트 생성 (Phase 5)",
+        "output/ 파일 생성 (Phase 6)",
+        "qa_report.json 생성 (QA)",
+        "최종 QA 점수 > 0"
+      ]
+    }
+  ],
+  "meta": {
+    "created_at": "2024-01-01",
+    "updated_at": "2026-03-30",
+    "version": "3.0.0",
+    "description": "book-writer v3.0 스킬의 12개 스크립트 + 전체 파이프라인 테스트 케이스",
+    "total_scripts": 12,
+    "total_references": 10,
+    "total_templates": 5,
+    "coverage": "init, consistency, style(22fn), emotion_arc, readability, format(docx/epub), blurb, webnovel, splitter, qa, codex, pipeline"
+  }
+}
