@@ -1,7 +1,9 @@
-# Edu-SaaS Builder v3 — 교육용 SaaS 자동 생성 스킬
+# Edu-SaaS Builder v3.2 — 교육용 SaaS 자동 생성 스킬
 
 > 1,200+ Claude 스킬·70+ SaaS 보일러플레이트·30+ 에듀테크 서비스·10+ 학습과학 알고리즘을
-> 종합 분석하여 설계된 교육용 SaaS 웹앱 자동 생성 올인원 스킬 (EPCT + Godogen + PLG)
+> 종합 분석 + 매쓰버스 실전 운영 경험 반영 (EPCT + Godogen + PLG)
+> 
+> v3.2 신규: 듀오링고 학습경로 UX, 오답 재풀기, 접기/펼치기, 콘텐츠 볼륨 가이드
 
 ## 트리거
 - "edu-saas", "교육 SaaS", "교육용 SaaS"
@@ -625,6 +627,36 @@ references/curriculum-secondary.md + references/coding-education.md 참조
 - Pattern A (Markdown Only): 지침 문서
 - Pattern B (Scripts): 빌드 검증, 시드 생성
 - Pattern C (External APIs): MCP 서버, AI SDK 연동
+
+### 17. 듀오링고 스타일 학습 경로 UX (v3.2 — 실전 검증)
+references/duolingo-path-ux.md 참조
+- **지그재그 스킬 경로**: 8-cycle offset 패턴으로 시각적 지그재그 경로
+- **접기/펼치기 단원**: 현재 단원만 펼침, 나머지 접힘 + "더보기" 버튼
+- **단원 복습 체크포인트**: 각 단원 끝에 트로피/복습 노드
+- **노드 상태 시각화**: mastered(초록)/current(보라+glow)/learning(파란)/locked(회색)
+- **스킬 7-8개/단원**: 개념→연습→심화→연습→실전→도전→활용 패턴
+- **연습 스킬 필수**: 2-3개 스킬은 너무 적음 → 연습 단계 반드시 포함
+
+### 18. 오답 재풀기 시스템 (v3.2 — 실전 검증)
+references/duolingo-path-ux.md 참조
+- **1차 오답 시 해설 숨김**: "아쉬워요! 나중에 다시 풀어볼게요"
+- **10문제 완료 후 재풀기**: 틀린 문제만 다시 출제
+- **재풀기에서도 오답 시 해설 표시**: 2차 시도이므로 학습 효과 극대화
+- **Phase 기반 상태관리**: first_round → retry_intro → retry_round → complete
+- **QuestionDisplay에 hideExplanation prop**: 오답 시 해설 렌더링 제어
+
+### 19. 콘텐츠 볼륨 가이드 (v3.2 — 실전 교훈)
+- **단원당 스킬 7-8개**: 개념 도입 + 연습 반복 + 심화 + 활용
+- **학기당 35+ 스테이지**: 충분한 학습량 확보
+- **절차적 문제 생성**: `ensureMinimumPool()`로 문제 부족 시 자동 생성
+- **적응형 반복**: 정답률이 안정될 때까지 비슷한 유형 계속 출제
+- **선행학습 금지법 준수**: getCurrentSemester()로 학기 필터링
+
+### 20. 배포 환경 다양성 (v3.2)
+- **Vercel**: git push → 자동 배포 (기본)
+- **Cloudflare Workers**: opennextjs-cloudflare + wrangler deploy (수동)
+- **D1 Database**: Cloudflare Workers 환경에서 SQLite 호환 DB
+- **주의**: CF Workers 배포 시 git push만으로 자동 배포 안됨
 
 ## 교차검증 출처 (확장: 70+)
 
